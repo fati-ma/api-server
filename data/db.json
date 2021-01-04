@@ -1,0 +1,41 @@
+{
+  "categories": [
+    {
+      "name": "cars",
+      "display_name": "Car",
+      "description": "category to let you buy anything for your car",
+      "id": "1"
+    },
+    {
+      "id": "2",
+      "name": "cameras",
+      "display_name": "Camera",
+      "description": "category to let you buy anything for your camera"
+    },
+    {
+      "id": "Vjf-vwX"
+    },
+    {
+      "name": "cars",
+      "display_name": "Car",
+      "description": "category to let you buy anything for your car",
+      "id": "uIPqgF6"
+    }
+  ],
+  "products": [
+    {
+      "id": "1",
+      "name": "Charger",
+      "category": "laptops",
+      "display_name": "Laptob Charger",
+      "description": "USB that can be used in any where to charge the laptob"
+    },
+    {
+      "id": "2",
+      "name": "Prime Lens",
+      "category": "cameras",
+      "display_name": "Camera Prime Lens",
+      "description": "High Inability to Zoom"
+    }
+  ]
+}
