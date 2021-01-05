@@ -12,9 +12,11 @@
 
 `npm init -y`
 
-`npm i express dotenv jest supertest`
+`npm i express dotenv jest supertest mogoose @code-fellows/supergoose  morgan cors`
 
-Add `PORT` to `.env`
+Add `PORT` in `.env`
+
+Add `MONGODB_URI` in `.env`
 
 start the server:
   - `node index.js`
@@ -54,3 +56,4 @@ start the server:
 ## UML     
 
 ![api-class7](img/api-server-2.png)
+
