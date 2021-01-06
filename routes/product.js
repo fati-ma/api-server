@@ -1,40 +1,44 @@
 'use strict';
 
 const express = require('express');
-const productModel = require('../lib/models/products/products-collection');
-const router = express.Router();
 
-// products routes 
-router.post('/', async (req, res) => {
-    let { category, name, display_name, description } = req.body;
-    let record = { category: category, name: name, display_name: display_name, description: description };
-    await productModel.create(record);
-    res.status(201).json(record);
+const productsRouter = express.Router();
+const productsModel = require('../lib/models/products/products-collection.js');
+
+//products Routes
+productsRouter.post('/products', (req, res) => {
+  productsModel.create(req.body).then((data) => {
+    res.status(201).json(data);
+  });
+});
+productsRouter.get('/products', (req, res) => {
+  productsModel.get().then((data) => {
+    const count = data.length;
+    res.status(200).json({ count, data });
+  });
+});
+productsRouter.get('/products/:id', (req, res) => {
+  let id = req.params.id;
+  productsModel.get(id).then((data) => {
+    res.status(200).json(data[0]);
+  });
+});
+productsRouter.put('/products/:id', (req, res) => {
+  let id = req.params.id;
+  productsModel.update(id, req.body).then(() => {
+    productsModel.get(id).then((data) => {
+      res.status(200).json(data[0]);
+    });
+  });
+});
+productsRouter.delete('/products/:id', (req, res) => {
+  let id = req.params.id;
+  productsModel.delete(id).then(() => {
+    productsModel.get().then((data) => {
+      const count = data.length;
+      res.status(200).json({ count, data });
+    });
+  });
 });
 
-// router.get('/', async (req, res) => {
-//     const obj = await productModel.read();
-//     res.status(200).json(obj);
-// });
-
-router.get('/:id', async (req, res) => {
-    let id = req.params.id;
-    let record = await productModel.get(id);
-    res.status(200).json(record[0]);
-});
-
-router.put('/:id', async (req, res) => {
-    let { category, name, display_name, description } = req.body;
-    let record = { category: category, name: name, display_name: display_name, description: description };
-    let id  = req.params.id;
-    await productModel.update(id, record);
-    res.redirect(`/products/${id}`);
-});
-
-router.delete('/:id', async (req, res) => {
-    let id = req.params.id;
-    await productModel.delete(id);
-    res.status(202).json({});
-});
-
-module.exports = router;
+module.exports = productsRouter;

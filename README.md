@@ -5,7 +5,7 @@
 
 ## Swagger Documentation
 
-[Swagger documentation that was created at Swagger Hub](https://app.swaggerhub.com/apis/fati-ma/api-server/0.1#/)
+[Swagger documentation](https://app.swaggerhub.com/apis/fati-ma/api-server/0.1#/) that was created at Swagger Hub
 
 
 ## Setup
@@ -18,6 +18,8 @@ Add `PORT` in `.env`
 
 Add `MONGODB_URI` in `.env`
 
+start mongodb `sudo service mongod start`
+
 start the server:
   - `node index.js`
   - `nodemon`
@@ -26,27 +28,25 @@ start the server:
 
 ## Endpoints
 
-    - http://localhost:3000/products
-    - http://localhost:3000/products/1
-    - http://localhost:3000/products/1
-    - http://localhost:3000/products/1
-    - http://localhost:3000/categories
-    - http://localhost:3000/categories/1
-    - http://localhost:3000/categories/1
-    - http://localhost:3000/categories/1
+    - http://localhost:3000/api/v1/products  
+    - http://localhost:3000/api/v1/products/1
+
+    - http://localhost:3000/api/v1/categories
+    - http://localhost:3000/api/v1/categories/1
+
 
 
 ## Test
 
   - Manual
-    - GET ALL: GET - http://localhost:3000/products
-    - GET ONE: GET - http://localhost:3000/products/1
-    - UPDATE ONE: PUT - http://localhost:3000/products/1
-    - DELETE ONE: DELETE - http://localhost:3000/products/1
-    - GET ALL: GET - http://localhost:3000/categories
-    - GET ONE: GET - http://localhost:3000/categories/1
-    - UPDATE ONE: PUT - http://localhost:3000/categories/1
-    - DELETE ONE: DELETE - http://localhost:3000/categories/1
+    - GET ALL: GET - http://localhost:3000/api/v1/products
+    - GET ONE: GET - http://localhost:3000/api/v1/products/1
+    - UPDATE ONE: PUT - http://localhost:3000/api/v1/products/1
+    - DELETE ONE: DELETE - http://localhost:3000/api/v1/products/1
+    - GET ALL: GET - http://localhost:3000/api/v1/categories
+    - GET ONE: GET - http://localhost:3000/api/v1/categories/1
+    - UPDATE ONE: PUT - http://localhost:3000/api/v1/categories/1
+    - DELETE ONE: DELETE - http://localhost:3000/api/v1/categories/1
 
   - jest
     - `npm test`
