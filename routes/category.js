@@ -1,46 +1,44 @@
 'use strict';
 
 const express = require('express');
-const categoryModel = require('../lib/models/categories/categories-collection');
-const router = express.Router();
 
-// category routes 
-router.post('/', async (req, res) => {
-    let { name, display_name, description } = req.body;
-    let record = { description: description, name: name, display_name: display_name };
-    await categoryModel.create(record);
-    res.status(201).json(record);
+const categoriesRouter = express.Router();
+const categoriesModel = require('../lib/models/categories/categories-collection.js');
+
+//Categories routes
+categoriesRouter.post('/categories', (req, res) => {
+  categoriesModel.create(req.body).then((data) => {
+    res.status(201).json(data);
+  });
+});
+categoriesRouter.get('/categories', (req, res) => {
+  categoriesModel.get().then((data) => {
+    const count = data.length;
+    res.status(200).json({ count, data });
+  });
+});
+categoriesRouter.get('/categories/:id', (req, res) => {
+  let id = req.params.id;
+  categoriesModel.get(id).then((data) => {
+    res.status(200).json(data[0]);
+  });
+});
+categoriesRouter.put('/categories/:id', (req, res) => {
+  let id = req.params.id;
+  categoriesModel.update(id, req.body).then(() => {
+    categoriesModel.get(id).then((data) => {
+      res.status(200).json(data[0]);
+    });
+  });
+});
+categoriesRouter.delete('/categories/:id', (req, res) => {
+  let id = req.params.id;
+  categoriesModel.delete(id).then(() => {
+    categoriesModel.get().then((data) => {
+      const count = data.length;
+      res.status(200).json({ count, data });
+    });
+  });
 });
 
-// router.get('/', async (req, res) => {
-//     const obj = await categoryModel.get();
-//     res.status(200).json(obj);
-// });
-
-// const id = req.params.id;
-// categoryModel.get(id).then(data => {
-//     res.status(200).json(data);
-// }).catch(next);
-
-router.get('/:id', async (req, res) => {
-    let id = req.params.id;
-    let record = await categoryModel.get(id);
-    res.status(200).json(record[0]);
-});
-
-router.put('/:id', async (req, res) => {
-    let { name, display_name, description } = req.body;
-    let record = { description: description, name: name, display_name: display_name };
-    let id = req.params.id;
-    await categoryModel.update(id, record);
-    res.status(201).json(record[0]);
-    // res.redirect(`/categories/${id}`);
-});
-
-router.delete('/:id', async (req, res) => {
-    let id = req.params.id;
-    await categoryModel.delete(id);
-    res.status(202).json({});
-});
-
-module.exports = router;
+module.exports = categoriesRouter;

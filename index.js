@@ -12,6 +12,7 @@ mongoose.connect(MONGODB_URI, {
     useCreateIndex: true,
     useFindAndModify: false,
     useUnifiedTopology: true
-});
-
-server.start();
+}).then(() => {
+    server.start();
+  })
+  .catch((err) => console.log(err.message));

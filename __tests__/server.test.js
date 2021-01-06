@@ -1,89 +1,176 @@
 'use strict';
 
-const server = require('../lib/server');
+const { server } = require('../lib/server.js');
 
-const supertest = require('supertest');
-const mockRequest = supertest(server.server);
+require('@code-fellows/supergoose');
+require('../lib/models/products/products-collection.js');
+require('../lib/models/categories/categories-collection.js');
 
-describe('Web Server' , ()=>{
+const supergoose = require('@code-fellows/supergoose');
+const mockRequest = supergoose(server);
 
-  describe('products Routing', ()=>{
+let productObj = {
+  name: 'cameras',
+  display_name: 'camera product',
+  description: 'camera description',
+  category: 'camera category',
+};
+let categoryObj = {
+  name: 'laptops',
+  display_name: 'laptops',
+  description: 'laptobs description',
+};
 
-    let consoleSpy ;
-
-    beforeEach(()=> {
-        consoleSpy = jest.spyOn(console, 'log').mockImplementation();
-    });
-
-    afterEach(()=> {
-        consoleSpy.mockRestore();
-    });
-
-    it('route:/products method:GET >> should response 200',()=>{
-      return mockRequest.get('/products').then(result=>{
-        expect(result.status).toBe(200);
-      });
-    });
-    it('route:/products/:id method:GET >> should response 200',()=>{
-      return mockRequest.get('/products/1').then(result=>{
-        expect(result.status).toBe(200);
-      });
-    });
-    it('route:/products method:POST >> should response 201',()=>{
-      return mockRequest.post('/products').then(result=>{
-        expect(result.status).toBe(201);
-      });
-    });
-    it('route:/products/:id method:PUT >> should response 201',()=>{
-      return mockRequest.put('/products/:id').then(result=>{
-        expect(result.status).toBe(201);
-      });
-    });
-
-    it('route:/products/:id method:DELETE >> should response 202',()=>{
-      return mockRequest.delete('/products/:id').then(result=>{
-        expect(result.status).toBe(202);
-      });
+describe('api server', () => {
+  it('Should respond with 500 on an internal/server error', async () => {
+    await mockRequest.get('/error').then((results) => {
+      expect(results.status).toBe(500);
     });
   });
 
-  describe('category Routing', ()=>{
+  it('Should respond with 404 on a wrong route', () => {
+    return mockRequest.get('/fatima').then((results) => {
+      expect(results.status).toBe(404);
+    });
+  });
+  it('Should respond with 200 on a right route', () => {
+    return mockRequest.get('/api/v1/categories').then((results) => {
+      expect(results.status).toBe(200);
+    });
+  });
+  it('Should respond with 404 on a wrong method', () => {
+    return mockRequest.post('/').then((results) => {
+      expect(results.status).toBe(404);
+    });
+  });
+  it('create() a category', () => {
+    return mockRequest
+      .post('/api/v1/categories')
+      .send(categoryObj)
+      .then((results) => {
+        let record = results.body;
+        Object.keys(categoryObj).forEach((key) => {
+          expect(record[key]).toEqual(categoryObj[key]);
+          expect(results.status).toBe(201);
+        });
+      });
+  });
 
-    let consoleSpy ;
+  it('create() a product', () => {
+    return mockRequest
+      .post('/api/v1/products')
+      .send(productObj)
+      .then((results) => {
+        let record = results.body;
+        Object.keys(productObj).forEach((key) => {
+          expect(record[key]).toEqual(productObj[key]);
+          expect(results.status).toBe(201);
+        });
+      });
+  });
 
-    beforeEach(()=> {
-        consoleSpy = jest.spyOn(console, 'log').mockImplementation();
-    });
+  it('get() a category', () => {
+    return mockRequest
+      .post('/api/v1/categories')
+      .send(categoryObj)
+      .then((data) => {
+        return mockRequest
+          .get(`/api/v1/categories/${data.body._id}`)
+          .then((record) => {
+            expect(record.body.name).toEqual(categoryObj.name);
+            expect(record.status).toBe(200);
+          });
+      });
+  });
 
-    afterEach(()=> {
-        consoleSpy.mockRestore();
-    });
+  it('get() a product', () => {
+    return mockRequest
+      .post('/api/v1/products')
+      .send(productObj)
+      .then((data) => {
+        return mockRequest
+          .get(`/api/v1/products/${data.body._id}`)
+          .then((record) => {
+            expect(record.body.name).toEqual(productObj.name);
+            expect(record.status).toBe(200);
+          });
+      });
+  });
 
-    it('route:/categories method:GET >> should response 200',()=>{
-      return mockRequest.get('/categories').then(result=>{
-        expect(result.status).toBe(200);
+  it('update() a category', () => {
+    let newObj = {
+      name: 'new category',
+      display_name: 'cameras',
+      description: 'cameras description',
+    };
+    return mockRequest
+      .post('/api/v1/categories')
+      .send(categoryObj)
+      .then((data) => {
+        return mockRequest
+          .put(`/api/v1/categories/${data.body._id}`)
+          .send(newObj)
+          .then((record) => {
+            expect(record.body.name).toEqual(newObj.name);
+            expect(record.status).toBe(200);
+          });
       });
-    });
-    it('route:/categories/:id method:GET >> should response 200',()=>{
-      return mockRequest.get('/categories/1').then(result=>{
-        expect(result.status).toBe(200);
+  });
+
+  it('update() a product', () => {
+    let newObj = {
+      name: 'new product',
+      display_name: 'laptobs',
+      description: 'laptobs description',
+      category: 'new one for laptobs',
+    };
+    return mockRequest
+      .post('/api/v1/products')
+      .send(productObj)
+      .then((data) => {
+        return mockRequest
+          .put(`/api/v1/products/${data.body._id}`)
+          .send(newObj)
+          .then((record) => {
+            expect(record.body.name).toEqual(newObj.name);
+            expect(record.status).toBe(200);
+          });
       });
-    });
-    it('route:/categories method:POST >> should response 201',()=>{
-      return mockRequest.post('/categories').then(result=>{
-        expect(result.status).toBe(201);
+  });
+
+  it('delete() a category', () => {
+    return mockRequest
+      .post('/api/v1/categories')
+      .send(categoryObj)
+      .then((data) => {
+        return mockRequest
+          .delete(`/api/v1/categories/${data.body._id}`)
+          .then(() => {
+            return mockRequest
+              .get(`/api/v1/categories/${data.body._id}`)
+              .then((record) => {
+                expect(record.body).toEqual('');
+                expect(record.status).toBe(200);
+              });
+          });
       });
-    });
-    it('route:/categories/:id method:PUT >> should response 201',()=>{
-      return mockRequest.put('/categories/1').then(result=>{
-        expect(result.status).toBe(201);
+  });
+
+  it('delete() a category', () => {
+    return mockRequest
+      .post('/api/v1/products')
+      .send(productObj)
+      .then((data) => {
+        return mockRequest
+          .delete(`/api/v1/products/${data.body._id}`)
+          .then(() => {
+            return mockRequest
+              .get(`/api/v1/products/${data.body._id}`)
+              .then((record) => {
+                expect(record.body).toEqual('');
+                expect(record.status).toBe(200);
+              });
+          });
       });
-    });
- 
-    it('route:/categories/:id method:DELETE >> should response 202',()=>{
-      return mockRequest.delete('/categories/:id').then(result=>{
-        expect(result.status).toBe(202);
-      });
-    });
   });
 });
