@@ -12,10 +12,10 @@ router.post('/', async (req, res) => {
     res.status(201).json(record);
 });
 
-// router.get('/', async (req, res) => {
-//     const obj = await productModel.read();
-//     res.status(200).json(obj);
-// });
+router.get('/', async (req, res) => {
+    const obj = await productModel.read();
+    res.status(200).json(obj);
+});
 
 router.get('/:id', async (req, res) => {
     let id = req.params.id;

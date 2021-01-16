@@ -6,16 +6,17 @@ const router = express.Router();
 
 // category routes 
 router.post('/', async (req, res) => {
+    // let id = req.params.id;
     let { name, display_name, description } = req.body;
     let record = { description: description, name: name, display_name: display_name };
     await categoryModel.create(record);
     res.status(201).json(record);
 });
 
-// router.get('/', async (req, res) => {
-//     const obj = await categoryModel.get();
-//     res.status(200).json(obj);
-// });
+router.get('/', async (req, res) => {
+    const obj = await categoryModel.get();
+    res.status(200).json(obj);
+});
 
 // const id = req.params.id;
 // categoryModel.get(id).then(data => {
