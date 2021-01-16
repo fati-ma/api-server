@@ -42,9 +42,9 @@ function handleGetItems(req, res, next) {
     // let id = req.params.id;
     req.model
         .get()
-        .then((results) => {
-            const count = results.length;
-            res.status(200).json({ count, results });
+        .then((data) => {
+            const count = data.length;
+            res.status(200).json({ count, data });
         })
         .catch(next);
 }
