@@ -1,3 +1,4 @@
+
 # Api Server
 
 ### Author: Fatima Atieh
@@ -6,6 +7,7 @@
 ## Swagger Documentation
 
 [Swagger documentation that was created at Swagger Hub](https://app.swaggerhub.com/apis/fati-ma/api-server/0.1#/)
+
 
 
 ## Setup
@@ -36,6 +38,7 @@ start the server:
     - http://localhost:3000/categories/1
 
 
+
 ## Test
 
   - Manual
@@ -56,4 +59,6 @@ start the server:
 ## UML     
 
 ![api-class7](img/api-server-2.png)
+
+
 
