@@ -5,7 +5,7 @@
 const mongoose = require('mongoose');
 const server = require('./lib/server.js');
 
-const MONGODB_URI = 'mongodb://localhost:27017/class8-food';
+const MONGODB_URI = 'mongodb+srv://fatima:0000@cluster0.6imvb.mongodb.net/api_todo?retryWrites=true&w=majority';
 
 mongoose.connect(MONGODB_URI, {
     useNewUrlParser: true,
