@@ -16,17 +16,19 @@ router.put('/api/v1/:model/:id', handleUpdateItems);
 router.delete('/api/v1/:model/:id', handleDeleteItems);
 
 function getModel(req, res, next) {
+
     const model = req.params.model;
+    
     switch (model) {
+        case 'todo':
+            req.model = notesModel;
+             break;
         case 'categories':
             req.model = categoriesModel;
             break;
         case 'products':
             req.model = productsModel;
-            break;
-        case 'todo':
-            req.model = notesModel;
-            break;
+            break;   
         default:
             throw new Error('Invalid Model');
     }
